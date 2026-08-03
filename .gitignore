@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+
+generated/*
+uploads/*
+temp/*
+
+*.aux
+*.log
+*.out
+*.pdf
