@@ -1,0 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+header {
+    margin-bottom: 30px;
+}
+
+header h1 {
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #666;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+.card h2 {
+    margin-bottom: 15px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 220px;
+    resize: vertical;
+    padding: 15px;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 12px 24px;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+}
+
+button:not(:disabled) {
+    background: #2563eb;
+    color: white;
+}
+
+button:disabled {
+    background: #cfcfcf;
+    cursor: not-allowed;
+}
+
+.editor-placeholder,
+.preview-placeholder {
+    height: 350px;
+    border: 2px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #777;
+}
+
+.actions {
+    display: flex;
+    gap: 20px;
+}

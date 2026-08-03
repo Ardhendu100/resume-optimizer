@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ATS Resume Optimizer</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>ATS Resume Optimizer</h1>
+        <p>
+            Paste a Job Description to analyze your existing resume and
+            generate an ATS-optimized version.
+        </p>
+    </header>
+
+    <section class="card">
+
+        <h2>Job Description</h2>
+
+        <textarea
+            id="job-description"
+            placeholder="Paste the complete Job Description here..."
+        ></textarea>
+
+        <button id="analyze-btn">
+            Analyze Resume
+        </button>
+
+    </section>
+
+    <section class="card">
+
+        <h2>ATS Score</h2>
+
+        <div id="ats-score">
+            Not analyzed yet.
+        </div>
+
+    </section>
+
+    <section class="card">
+
+        <h2>Resume Editor</h2>
+
+        <div class="editor-placeholder">
+            Monaco Editor will be integrated in Phase 2.
+        </div>
+
+    </section>
+
+    <section class="card">
+
+        <h2>Live PDF Preview</h2>
+
+        <div class="preview-placeholder">
+            PDF Preview will appear here.
+        </div>
+
+    </section>
+
+    <div class="actions">
+
+        <button disabled>
+            Download PDF
+        </button>
+
+        <button disabled>
+            Download TEX
+        </button>
+
+    </div>
+
+</div>
+
+<script src="/static/js/main.js"></script>
+
+</body>
+</html>
