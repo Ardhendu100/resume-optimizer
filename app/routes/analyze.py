@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
+from pydantic import BaseModel
 
 from app.services.workspace import Workspace
 from app.services.latex import compile_resume
+from app.services.ai import optimize_resume
 
 
 router = APIRouter(
@@ -16,8 +18,19 @@ router = APIRouter(
 workspaces = {}
 
 
+class AnalyzeRequest(BaseModel):
+    """Request body for the analyze endpoint.
+
+    The job description is currently unused by the backend but is
+    required by the frontend to send a JSON payload.  Keeping the
+    model makes the API explicit and allows future extensions.
+    """
+
+    job_description: str
+
+
 @router.post("/analyze")
-async def analyze_resume():
+async def analyze_resume(request: AnalyzeRequest):
 
     # Create isolated workspace
     workspace = Workspace()
@@ -25,7 +38,26 @@ async def analyze_resume():
     # Copy resume.tex and resume.cls
     workspace.prepare()
 
-    # Compile LaTeX
+    # Compile original resume first (optional, but keeps existing flow)
+    original_compile = compile_resume(
+        workspace_dir=workspace.temp_dir,
+        output_dir=workspace.output_dir,
+    )
+
+    # Read original tex
+    original_tex = workspace.tex_file.read_text(encoding="utf-8")
+
+    # Ask Gemini for optimization
+    ai_result = optimize_resume(
+        job_description=request.job_description,
+        original_tex=original_tex,
+    )
+
+    # Write optimized tex to workspace
+    optimized_tex_path = workspace.tex_file
+    optimized_tex_path.write_text(ai_result["optimized_tex"], encoding="utf-8")
+
+    # Compile optimized resume
     compile_result = compile_resume(
         workspace_dir=workspace.temp_dir,
         output_dir=workspace.output_dir,
@@ -44,6 +76,10 @@ async def analyze_resume():
         "return_code": compile_result.returncode,
         "stdout": compile_result.stdout[-500:],
         "stderr": compile_result.stderr[-500:],
+        "ats_score": ai_result["ats_score"],
+        "matched_keywords": ai_result["matched_keywords"],
+        "missing_keywords": ai_result["missing_keywords"],
+        "suggestions": ai_result["suggestions"],
     }
 
 
