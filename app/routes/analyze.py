@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from app.services.workspace import Workspace
+from app.services.workspace import Workspace, TEMP_ROOT, GENERATED_ROOT
 from app.services.latex import compile_resume
 from app.services.ai import optimize_resume
 
@@ -161,3 +161,23 @@ def download_tex(workspace_id: str):
         media_type="application/x-tex",
         filename="resume.tex"
     )
+
+@router.post("/reset")
+def reset_workspace():
+    """Clear all temporary and generated files and reset in‑memory state.
+
+    This endpoint is intended for the UI reset button.  It removes the
+    contents of the ``temp`` and ``generated`` directories and clears the
+    ``workspaces`` dictionary.
+    """
+    import shutil
+
+    # Remove temp and generated directories
+    shutil.rmtree(TEMP_ROOT, ignore_errors=True)
+    shutil.rmtree(GENERATED_ROOT, ignore_errors=True)
+    # Re‑create root directories
+    TEMP_ROOT.mkdir(parents=True, exist_ok=True)
+    GENERATED_ROOT.mkdir(parents=True, exist_ok=True)
+    # Clear in‑memory workspaces
+    workspaces.clear()
+    return {"success": True}

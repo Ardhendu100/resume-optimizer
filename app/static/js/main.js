@@ -67,9 +67,11 @@ const downloadTexBtn = document.getElementById("download-tex-btn");
 
 
                 document.getElementById("pdfViewer").src = pdfUrl;
-                // Enable download buttons
-                document.getElementById("download-pdf-btn").disabled = false;
-                document.getElementById("download-tex-btn").disabled = false;
+        // Enable download buttons
+        document.getElementById("download-pdf-btn").disabled = false;
+        document.getElementById("download-tex-btn").disabled = false;
+        // Enable reset button
+        resetBtn.disabled = false;
                 // Store workspace id for download links
                 window.currentWorkspaceId = data.workspace_id;
 
@@ -121,5 +123,26 @@ downloadPdfBtn.addEventListener("click", () => {
 downloadTexBtn.addEventListener("click", () => {
     if (window.currentWorkspaceId) {
         window.location.href = `/api/download/tex/${window.currentWorkspaceId}`;
+    }
+});
+
+// Reset button handler
+const resetBtn = document.getElementById("reset-btn");
+resetBtn.addEventListener("click", async () => {
+    resetBtn.disabled = true;
+    resetBtn.textContent = "Resetting…";
+    try {
+        await fetch("/api/reset", { method: "POST" });
+        // Clear UI
+        document.getElementById("ats-score").innerText = "Not analyzed yet.";
+        document.getElementById("pdfViewer").src = "";
+        window.currentWorkspaceId = null;
+        downloadPdfBtn.disabled = true;
+        downloadTexBtn.disabled = true;
+    } catch (e) {
+        console.error(e);
+    } finally {
+        resetBtn.disabled = false;
+        resetBtn.textContent = "Reset";
     }
 });
